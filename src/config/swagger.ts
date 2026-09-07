@@ -12,8 +12,16 @@ export const swaggerDocument = {
   },
   servers: [
     {
+      url: '/',
+      description: 'Current Environment (Auto-detect)',
+    },
+    {
+      url: 'https://eventhub-backend-xc5n.onrender.com',
+      description: 'Render Production Server',
+    },
+    {
       url: 'http://localhost:5000',
-      description: 'Local Development Server',
+      description: 'Localhost Development',
     },
   ],
   components: {
