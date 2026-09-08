@@ -1,10 +1,24 @@
 import nodemailer from 'nodemailer';
 
 const createTransporter = () => {
+  // Use Nodemailer's built-in 'gmail' service for Gmail accounts.
+  // Cloud providers like Render, AWS, and Heroku often block/timeout outbound port 587,
+  // whereas service: 'gmail' handles secure port routing automatically.
+  if (process.env.SMTP_HOST?.includes('gmail') || process.env.SMTP_USER?.includes('@gmail.com')) {
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
+      },
+    });
+  }
+
+  const port = parseInt(process.env.SMTP_PORT || '587');
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_PORT === '465',
+    host: process.env.SMTP_HOST || 'smtp.ethereal.email',
+    port,
+    secure: port === 465,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASSWORD,
