@@ -760,5 +760,44 @@ export const swaggerDocument = {
         },
       },
     },
+    '/api/payments/verify/{bookingId}': {
+      get: {
+        tags: ['Payments'],
+        summary: 'Verify Payment & Confirm Booking',
+        description: 'Checks Stripe payment status directly. If paid, confirms booking, decrements event seats, and triggers confirmation email. Perfect for localhost testing and frontend redirect fallback.',
+        parameters: [
+          {
+            name: 'bookingId',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'uuid' },
+            description: 'The booking ID to verify',
+            example: '61526d00-0a1e-48be-ad5f-801e5f4b586b',
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Payment verified and booking confirmed',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    message: { type: 'string', example: 'Payment verified successfully. Booking confirmed and seats updated.' },
+                    data: { $ref: '#/components/schemas/Booking' },
+                  },
+                },
+              },
+            },
+          },
+          404: {
+            description: 'Booking not found',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } },
+          },
+        },
+      },
+    },
   },
 };
+
