@@ -2,11 +2,12 @@ import nodemailer from 'nodemailer';
 
 const createTransporter = () => {
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.ethereal.email',
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_PORT === '465',
     auth: {
-      user: process.env.SMTP_USER || 'test_user',
-      pass: process.env.SMTP_PASSWORD || 'test_pass',
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
     },
   });
 };
@@ -14,14 +15,15 @@ const createTransporter = () => {
 export const sendWelcomeEmail = async (email: string, name: string) => {
   try {
     const transporter = createTransporter();
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'noreply@eventhub.com',
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_FROM || 'EventHub <rockyman324@gmail.com>',
       to: email,
       subject: 'Welcome to EventHub!',
       text: `Hello ${name},\n\nWelcome to EventHub! We are excited to have you on board.`,
     });
+    console.log(`[EMAIL SUCCESS] Welcome email delivered to: ${email}, MessageId: ${info.messageId}`);
   } catch (error) {
-    console.warn('Development warning: Failed to send welcome email.', error);
+    console.error(`[EMAIL ERROR] Failed to send welcome email to ${email}:`, error);
   }
 };
 
