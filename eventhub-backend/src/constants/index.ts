@@ -1,0 +1,36 @@
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  ORGANIZER: 'ORGANIZER',
+  CUSTOMER: 'CUSTOMER',
+} as const;
+
+export type Role = (typeof ROLES)[keyof typeof ROLES];
+export const ROLE_VALUES = [ROLES.ADMIN, ROLES.ORGANIZER, ROLES.CUSTOMER] as const;
+
+export const BOOKING_STATUS = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export type BookingStatus = (typeof BOOKING_STATUS)[keyof typeof BOOKING_STATUS];
+export const BOOKING_STATUS_VALUES = [
+  BOOKING_STATUS.PENDING,
+  BOOKING_STATUS.CONFIRMED,
+  BOOKING_STATUS.CANCELLED,
+] as const;
+
+export const PAYMENT_STATUS = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+} as const;
+
+export type PaymentStatus = (typeof PAYMENT_STATUS)[keyof typeof PAYMENT_STATUS];
+export const PAYMENT_STATUS_VALUES = [
+  PAYMENT_STATUS.PENDING,
+  PAYMENT_STATUS.SUCCESS,
+  PAYMENT_STATUS.FAILED,
+  PAYMENT_STATUS.REFUNDED,
+] as const;
