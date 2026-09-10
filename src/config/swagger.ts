@@ -226,6 +226,14 @@ export const swaggerDocument = {
                           type: 'string',
                           example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
                         },
+                        accessToken: {
+                          type: 'string',
+                          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                        },
+                        refreshToken: {
+                          type: 'string',
+                          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                        },
                       },
                     },
                   },
@@ -235,6 +243,67 @@ export const swaggerDocument = {
           },
           401: {
             description: 'Invalid credentials',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } },
+          },
+        },
+      },
+    },
+    '/api/auth/refresh-token': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Refresh Access Token',
+        description: 'Generates a new access token and refresh token using a valid refresh token.',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['refreshToken'],
+                properties: {
+                  refreshToken: {
+                    type: 'string',
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'Token refreshed successfully',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    message: { type: 'string', example: 'Token refreshed successfully' },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        token: {
+                          type: 'string',
+                          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                        },
+                        accessToken: {
+                          type: 'string',
+                          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                        },
+                        refreshToken: {
+                          type: 'string',
+                          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          401: {
+            description: 'Invalid or expired refresh token',
             content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } },
           },
         },

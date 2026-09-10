@@ -44,3 +44,17 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
     next(error);
   }
 };
+
+export const refreshToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { refreshToken } = req.body;
+    const authResult = await authService.refreshUserToken(refreshToken);
+    res.status(200).json({
+      success: true,
+      message: 'Token refreshed successfully',
+      data: authResult,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
