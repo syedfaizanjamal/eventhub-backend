@@ -16,3 +16,11 @@ enum PaymentStatus {
   FAILED
   REFUNDED
 }
+
+enum PaymentMode {
+  STRIPE
+  RAZORPAY
+  PAYPAL
+  CASH
+  OTHER
+}

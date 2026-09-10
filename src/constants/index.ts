@@ -34,3 +34,20 @@ export const PAYMENT_STATUS_VALUES = [
   PAYMENT_STATUS.FAILED,
   PAYMENT_STATUS.REFUNDED,
 ] as const;
+
+export const PAYMENT_MODE = {
+  STRIPE: 'STRIPE',
+  RAZORPAY: 'RAZORPAY',
+  PAYPAL: 'PAYPAL',
+  CASH: 'CASH',
+  OTHER: 'OTHER',
+} as const;
+
+export type PaymentMode = (typeof PAYMENT_MODE)[keyof typeof PAYMENT_MODE];
+export const PAYMENT_MODE_VALUES = [
+  PAYMENT_MODE.STRIPE,
+  PAYMENT_MODE.RAZORPAY,
+  PAYMENT_MODE.PAYPAL,
+  PAYMENT_MODE.CASH,
+  PAYMENT_MODE.OTHER,
+] as const;

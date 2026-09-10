@@ -5,14 +5,16 @@ import { AppError } from '../utils/appError';
 export const getAllEvents = async (page: number, limit: number, search?: string) => {
   const skip = (page - 1) * limit;
 
-  const whereClause = search
-    ? {
-        title: {
-          contains: search,
-          mode: 'insensitive' as const,
-        },
-      }
-    : {};
+  const whereClause: any = {
+    isDeleted: false,
+  };
+
+  if (search) {
+    whereClause.title = {
+      contains: search,
+      mode: 'insensitive' as const,
+    };
+  }
 
   const [events, total] = await Promise.all([
     prisma.event.findMany({
@@ -39,7 +41,7 @@ export const getEventById = async (id: string) => {
   const event = await prisma.event.findUnique({
     where: { id },
   });
-  if (!event) throw new AppError('Event not found', 404);
+  if (!event || event.isDeleted) throw new AppError('Event not found', 404);
   return event;
 };
 
@@ -62,10 +64,10 @@ export const createEvent = async (data: any, organizerId: string) => {
 export const updateEvent = async (id: string, data: any, user: { id: string; role: string }) => {
   const { id: userId, role } = user;
   const event = await prisma.event.findUnique({ where: { id } });
-  if (!event) throw new AppError('Event not found', 404);
+  if (!event || event.isDeleted) throw new AppError('Event not found', 404);
 
   if (role === ROLES.ORGANIZER && event.organizerId !== userId) {
-    throw new AppError('Forbidden: You can only update your own events', 403);
+    throw new AppError('Forbidden: You can only delete your own events', 403);
   }
 
   // Handle totalSeats update: ensure new total is not less than already booked
@@ -94,7 +96,7 @@ export const deleteEvent = async (id: string, user: { id: string; role: string }
     include: { bookings: true },
   });
 
-  if (!event) throw new AppError('Event not found', 404);
+  if (!event || event.isDeleted) throw new AppError('Event not found', 404);
 
   if (role === ROLES.ORGANIZER && event.organizerId !== userId) {
     throw new AppError('Forbidden: You can only delete your own events', 403);
@@ -104,7 +106,8 @@ export const deleteEvent = async (id: string, user: { id: string; role: string }
     throw new AppError('Conflict: Cannot delete an event that has bookings', 409);
   }
 
-  return await prisma.event.delete({
+  return await prisma.event.update({
     where: { id },
+    data: { isDeleted: true },
   });
 };

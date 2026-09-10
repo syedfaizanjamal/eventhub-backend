@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { BOOKING_STATUS, PAYMENT_STATUS, ROLES } from '../constants';
+import { BOOKING_STATUS, PAYMENT_MODE, PAYMENT_STATUS, ROLES } from '../constants';
 import prisma from '../config/prisma';
 import { sendBookingCancellationEmail } from '../utils/email';
 import { AppError } from '../utils/appError';
@@ -13,7 +13,7 @@ export const createBooking = async (userId: string, data: { eventId: string; qua
     where: { id: data.eventId },
   });
 
-  if (!event) throw new AppError('Event not found', 404);
+  if (!event || event.isDeleted) throw new AppError('Event not found', 404);
   if (event.date < new Date()) throw new AppError('Event date has already passed', 400);
   if (event.availableSeats < data.quantity) throw new AppError('Not enough seats available', 400);
 
@@ -60,6 +60,7 @@ export const createBooking = async (userId: string, data: { eventId: string; qua
       amount: totalAmount,
       currency: 'INR',
       status: PAYMENT_STATUS.PENDING,
+      paymentMode: PAYMENT_MODE.STRIPE,
       stripeSessionId: session.id,
     },
   });

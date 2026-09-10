@@ -22,11 +22,15 @@ model Payment {
   amount          Float
   currency        String        @default("INR")
   status          PaymentStatus @default(PENDING)
-  stripeSessionId String        @unique
+  paymentMode     PaymentMode   @default(STRIPE)
+  stripeSessionId String?       @unique
+  transactionId   String?       @unique
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
   booking         Booking       @relation(fields: [bookingId], references: [id])
 
   @@index([stripeSessionId])
+  @@index([transactionId])
+  @@index([paymentMode])
 }

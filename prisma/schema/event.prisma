@@ -9,6 +9,7 @@ model Event {
   totalSeats     Int
   availableSeats Int
   imageUrl       String?
+  isDeleted      Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -17,4 +18,5 @@ model Event {
 
   @@index([organizerId])
   @@index([date])
+  @@index([isDeleted])
 }
