@@ -5,6 +5,7 @@ import bookingRoutes from './booking.routes';
 import paymentRoutes from './payment.routes';
 import adminRoutes from './admin.routes';
 import organizerRoutes from './organizer.routes';
+import analyticsRoutes from './analytics.routes';
 
 const router = Router();
 
@@ -15,6 +16,7 @@ router.use('/bookings', bookingRoutes);
 router.use('/payments', paymentRoutes);
 router.use('/admin', adminRoutes);
 router.use('/organizer', organizerRoutes);
+router.use('/analytics', analyticsRoutes);
 
 // Health check endpoint
 router.get('/health', (req, res) => {
